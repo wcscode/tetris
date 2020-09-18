@@ -7,12 +7,12 @@ export default class PlayScene{
         this._config = game.config; 
 
         this._aggregate = 0;
-        this._aggregateRate = 2;
+        this._aggregateRate = .07;
 
         this._transitionAlpha = 1;
-        this._transitionRate = 0.01;
-        this._countDown = 30;
-        this._canCountDown = true;
+        this._transitionRate = 0.02;
+        this._countDown = 3;
+        this._canCountDown = false;
     }
 
     get name() { return 'PLAY' }
@@ -37,12 +37,15 @@ export default class PlayScene{
                 
                 this._aggregate += this._aggregateRate  * (1 + dt); 
 
-                if (this._aggregate > 100) this._aggregate = 0;
+                if (this._aggregate > 2) this._aggregate = 0;
     
-                if((Math.trunc(this._aggregate) % 2 == 0) && this._canCountDown) {
+                if((Math.trunc(this._aggregate) % 2 == 0)) {
 
-                    this._countDown -= 1;                    
-                    this._canCountDown = false;
+                    if(this._canCountDown){
+                        
+                        this._countDown -= 1; 
+                        this._canCountDown = false;
+                    }
 
                     if(this._countDown == 0)
                         this._game.state.active('PLAY_SCENE_RUNNING');
@@ -54,7 +57,7 @@ export default class PlayScene{
 
               
 
-              this._countDown = Math.trunc(this._aggregate)  % 2 == 0;
+              //this._countDown = Math.trunc(this._aggregate)  % 2 == 0;
 
                 break;
         }

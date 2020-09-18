@@ -10,7 +10,7 @@ export default class StartScene{
         this._aggregateRate = 2;
 
         this._transitionAlpha = 0;
-        this._transitionRate = 0.01;
+        this._transitionRate = 0.02;
      
        // this._preRenderPieces = this.preRenderPieces(this._pieces);   
        this._preRenderBackgroundPieces = this.preRenderBackgroundPieces();      
