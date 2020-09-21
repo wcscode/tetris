@@ -20,16 +20,13 @@ export default class EngineGame {
 
         this._deltaTime = (timestamp - this._lastFrameTime) / 1000;
         this._lastFrameTime = timestamp;
-
-        //console.log(this._deltaTime);
+        
         this.update(this._deltaTime);
         this.render();
         requestAnimationFrame(this.loop);
     }
 
-    static setConfig = (config) => { this._config = config; }
-
-    
+    static setConfig = (config) => { this._config = config; }    
 
     static start = () => { 
                 
