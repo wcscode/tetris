@@ -1,18 +1,32 @@
+import Piece from "../Pieces.class.js";
+
 export default class PlayScene{
 
     constructor(game){
 
         this._game = game;
-        this._context = game.context;
-        this._config = game.config; 
+       
 
         this._aggregate = 0;
-        this._aggregateRate = .07;
+        this._aggregateRate = .04;
+
+        
 
         this._transitionAlpha = 1;
         this._transitionRate = 0.02;
         this._countDown = 3;
         this._canCountDown = false;
+
+        this._blockSide = this._game.config.canvasWidth / 20;
+        this._preRenderedBackground = this.preRenderBackground();
+
+        this._piece = new Piece(game, this._blockSide);
+        this._piece.new();
+
+
+        this._tickFall = 0;
+        this._tickFallVelocity = 50;
+        this._tickMovement = 0;
     }
 
     get name() { return 'PLAY' }
@@ -21,7 +35,25 @@ export default class PlayScene{
 
         switch(this._game.state.get){
 
-            case 'PLAY_SCENE_RUNNING':        ;   
+            case 'PLAY_SCENE_RUNNING':  
+            
+                if(!this._piece.canFall)
+                    this._piece.new(); 
+
+                if(this.isTickFall(dt)) {                   
+                    this._piece.moveDown();
+                }
+
+                if(this.isTickMovement(dt)){
+                    if (this._game.control.isPressed('PLAYER_1', 'LEFT'))
+                        this._piece.moveLeft();
+                    
+                    if (this._game.control.isPressed('PLAYER_1', 'RIGHT'))
+                        this._piece.moveRight();
+                }
+                
+            
+
                 break;    
 
             case 'PLAY_SCENE_TRANSITION_END':
@@ -66,44 +98,108 @@ export default class PlayScene{
 
     render = () => {
 
-        this._context.clearRect(0, 0, this._config.canvasWidth, this._config.canvasHeight); 
+        const { canvasWidth, canvasHeight, canvasCenterX, canvasCenterY } = this._game.config;
+
+        this._game.context.clearRect(0, 0, canvasWidth, canvasHeight); 
         
-        this._context.fillStyle = '#ffccdd';
-        this._context.fillRect(0, 0, this._config.canvasWidth, this._config.canvasHeight);        
-        this._context.fill();         
+        this._game.context.fillStyle = '#ffccdd';
+        this._game.context.fillRect(0, 0, canvasWidth, canvasHeight);        
+        this._game.context.fill();         
+        
+ 
+        this._game.context.drawImage(this._preRenderedBackground, 0, 0)
         
         switch(this._game.state.get){
 
             case 'PLAY_SCENE_RUNNING':        
 
-                this._context.beginPath(); 
-                this._context.font = '60px Tetris';
-                this._context.fillStyle = '#5F5753';
-                this._context.textAlign = 'center';
-                this._context.textBaseline = 'middle';
-                this._context.fillText('Running', this._config.canvasCenterX, this._config.canvasCenterY);
+                this._piece.render();
 
                 break;              
 
             case 'PLAY_SCENE_TRANSITION_END':
 
-                this._context.fillStyle = `rgba(255, 255, 255, ${this._transitionAlpha})`;
-                this._context.fillRect(0, 0, this._config.canvasWidth, this._config.canvasHeight);
+                this._game.context.fillStyle = `rgba(255, 255, 255, ${this._transitionAlpha})`;
+                this._game.context.fillRect(0, 0, canvasWidth, canvasHeight);
 
                 break;
 
             case 'PLAY_SCENE_INTRO_COUNT':        
 
-                this._context.beginPath(); 
-                this._context.font = '120px Tetris';
-                this._context.fillStyle = '#5F5753';
-                this._context.textAlign = 'center';
-                this._context.textBaseline = 'middle';
-                this._context.fillText(this._countDown, this._config.canvasCenterX, this._config.canvasCenterY);
+                this._game.context.beginPath(); 
+                this._game.context.font = '120px Tetris';
+                this._game.context.fillStyle = 'white';
+                this._game.context.textAlign = 'center';
+                this._game.context.textBaseline = 'middle';
+                this._game.context.fillText(this._countDown, canvasCenterX, canvasCenterY);
 
                 break;            
             
-        }
+        }      
        
     }
+
+    isTickFall = (dt) =>  {
+
+        this._tickFall += Math.floor(1 * (1 + dt));
+
+        if(this._tickFall % this._tickFallVelocity == 0) {
+
+            this._tickFall = 0;
+            return true;
+
+        }
+
+        return false;
+    }
+
+    isTickMovement = (dt) =>  {
+
+        this._tickMovement += Math.floor(1 * (1 + dt));
+
+        if(this._tickMovement % 12 == 0) {
+
+            this._tickMovement = 0;
+            return true;
+        }
+
+        return false;
+    }
+
+    preRenderBackground = () =>{
+
+        const { canvasWidth, canvasHeight } = this._game.config;
+          
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        this._game.context.fillStyle = '#ffbbbb';
+        this._game.context.fillRect(0, 0, canvasWidth / 4, canvasHeight);        
+        this._game.context.fill();
+
+        this._game.context.fillStyle = '#ffbbbb';
+        this._game.context.fillRect(canvasWidth - canvasWidth / 4, 0, canvasWidth / 4, canvasHeight);        
+        this._game.context.fill();
+
+        context.fillStyle = 'purple';
+        context.strokeStyle = '#ffccdd';
+        context.lineWidth = 1;
+
+        for(var y = 0; y < 20; ++y){
+
+            for(var x = 0; x < 10; ++x){
+            
+                context.fillRect((canvasWidth / 4) + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
+                context.strokeRect((canvasWidth / 4) + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
+            }
+
+        }
+        
+        return canvas;
+    }
+
+
 }

@@ -100,8 +100,8 @@ export default class StartScene{
         
         const { canvasWidth } = this._game.config        
         const xPiece = (canvasWidth - 200) / 4;
-
         const offset = 10;
+        
         const o = (canvas) => {
 
             const context = canvas.getContext('2d');            
