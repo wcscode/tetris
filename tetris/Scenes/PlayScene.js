@@ -1,5 +1,6 @@
 import Piece from "../Pieces.class.js";
 import Grid from "../Grid.class.js";
+import Collision from "../Collision.class.js";
 
 export default class PlayScene{
 
@@ -29,10 +30,16 @@ export default class PlayScene{
 
         switch(this._game.state.get){
 
-            case 'PLAY_SCENE_RUNNING':             
-                
-                this._grid.update(dt);
+            case 'PLAY_SCENE_RUNNING':   
+
                 this._piece.update(dt);
+
+                Collision.piece = this._piece;                
+                Collision.grid = this._grid;
+                Collision.checkCollision(this._blockSide);
+
+                this._grid.update(dt);
+
                 break;    
 
             case 'PLAY_SCENE_TRANSITION_END':

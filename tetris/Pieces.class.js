@@ -16,7 +16,8 @@ export default class Piece{
             direction: 'UP',
             x: this._blockSide * 8, 
             y: 0,
-            canFall: true
+            canFall: true,
+            size: 4
         }
 
         const t = { blocks: [
@@ -29,7 +30,8 @@ export default class Piece{
             direction: 'UP',
             x: this._blockSide * 8, 
             y: 0,
-            canFall: true
+            canFall: true,
+            size: 3
         }
 
         const l = { blocks: [
@@ -42,7 +44,8 @@ export default class Piece{
             direction: 'UP',
             x: this._blockSide * 8, 
             y: 0,
-            canFall: true
+            canFall: true,
+            size: 3
         }
 
         const j = { blocks: [
@@ -55,7 +58,8 @@ export default class Piece{
             direction: 'UP',
             x: this._blockSide * 8, 
             y: 0,
-            canFall: true
+            canFall: true,
+            size: 3
         }
 
         const s = { blocks: [
@@ -68,7 +72,8 @@ export default class Piece{
             direction: 'UP',
             x: this._blockSide * 8, 
             y: 0,
-            canFall: true
+            canFall: true,
+            size: 3
         }   
 
 
@@ -82,7 +87,8 @@ export default class Piece{
             direction: 'UP',
             x: this._blockSide * 8, 
             y: 0,
-            canFall: true
+            canFall: true,
+            size: 3
         }   
 
         const o =  { blocks: [
@@ -94,11 +100,11 @@ export default class Piece{
             direction: 'UP',
             x: this._blockSide * 9, 
             y: 0,
-            canFall: true
+            canFall: true,
+            size: 2
         };
              
         this._pieces = [];
-
         
         this._pieces.push(i);
         this._pieces.push(t);
@@ -111,9 +117,17 @@ export default class Piece{
         this._tickMovement = 0;
     }
 
+    get blocks() { return this._currentPiece.blocks; }
+    get x() { return this._currentPiece.x; }
+    get y() { return this._currentPiece.y; }
+    get size() { return this._currentPiece.size; }
+    get lastMove() { return this._lastMove; }  
+    get direction() { return this._currentPiece.direction; }
+    get side() { return this._blockSide; } 
+
     new = () => {
 
-        this._currentPiece = this._pieces[6];
+       this._currentPiece = this._pieces[Math.floor((Math.random() * 7))];
        /* this._currentPiece = {
             blocks: this._pieces[0], //this._pieces[Math.floor((Math.random() * 4))],
             direction: 'UP',
@@ -124,9 +138,10 @@ export default class Piece{
     }
 
     moveDown = () => { this._currentPiece.y += this._blockSide; }
-    moveLeft = () => { this._currentPiece.x += -this._blockSide; }
-    moveRight = () => { this._currentPiece.x += this._blockSide; }
-    rotate = () => {
+    moveLeft = () => { this._currentPiece.x += -this._blockSide; this._lastMove = 'LEFT'; }
+    moveRight = () => { this._currentPiece.x += this._blockSide; this._lastMove = 'RIGHT'; }
+
+    rotate = (clockWise = true) => {
         
         const positions = [
 
@@ -136,10 +151,12 @@ export default class Piece{
             {key:3, value:'RIGHT'}
         ];
 
-        const key = (positions.find(f => f.value == this._currentPiece.direction).key + 1) % 4;       
-        this._currentPiece.direction = positions.find(f => f.key == key).value;       
+        const key = (positions.find(f => f.value == this._currentPiece.direction).key + ((clockWise ? -1 : 1) % 4) + 4 ) % 4;       
+        this._currentPiece.direction = positions.find(f => f.key == key).value;  
+        
+        this._lastMove = 'RIGHT';
     }
-
+   
     get canFall() { return this._currentPiece.canFall }
     set canFall(value) { this._currentPiece.canFall = value }
 
@@ -167,7 +184,7 @@ export default class Piece{
         this._game.context.beginPath();
         this._game.context.fillStyle = 'red';
 
-        const size = Math.sqrt(this._currentPiece.blocks.length);
+        const size = this._currentPiece.size;
 
         for(let y = 0; y < size; ++y){
             
@@ -175,8 +192,15 @@ export default class Piece{
 
                 let direction = this._currentPiece.direction;
                 let block = this._currentPiece.blocks[this.position(direction, size, x, y)];               
-                if(block == 1)                   
+
+                if(block == 1) {                  
+                    this._game.context.fillStyle = 'red';
                     this._game.context.fillRect(this._currentPiece.x + this._blockSide * x, this._currentPiece.y + this._blockSide * y, this._blockSide, this._blockSide);                
+                }
+                else{
+                    this._game.context.fillStyle = 'green';
+                    this._game.context.fillRect(this._currentPiece.x + this._blockSide * x, this._currentPiece.y + this._blockSide * y, this._blockSide, this._blockSide);                
+                }
             }            
         }
     }

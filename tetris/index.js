@@ -41,8 +41,8 @@ Game.load = () => {
 
     Game.scene.active('START');
    //retirar
-    Game.scene.active('PLAY');  
-    Game.state.active('PLAY_SCENE_RUNNING'); 
+    //Game.scene.active('PLAY');  
+    //Game.state.active('PLAY_SCENE_RUNNING'); 
 }
 
 Game.update = (dt) =>{
