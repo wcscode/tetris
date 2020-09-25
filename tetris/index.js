@@ -10,7 +10,8 @@ import PlayScene from './Scenes/PlayScene.js';
 
 Game.setConfig({ 
     canvasWidth: 800,
-    canvasHeigth: 600
+    canvasHeigth: 600,
+    debugMode: true
 })
 
 Game.load = () => {    
@@ -41,8 +42,8 @@ Game.load = () => {
 
     Game.scene.active('START');
    //retirar
-    //Game.scene.active('PLAY');  
-    //Game.state.active('PLAY_SCENE_RUNNING'); 
+    Game.scene.active('PLAY');  
+    Game.state.active('PLAY_SCENE_RUNNING'); 
 }
 
 Game.update = (dt) =>{

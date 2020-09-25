@@ -9,20 +9,36 @@ export default class Grid{
 
         this._xblock = 10;
         this._yblock = 20;
-        
-        this._x = canvasWidth / 4;
-        this._y = 0;        
+           
         this._width = this._xblock * this._blockSide;
         this._height = this._yblock * this._blockSide;
 
+        this._x = (canvasWidth / 2) - (this._width / 2);
+        this._y = 0;    
+
         this._tickFall = 0;
-        this._tickFallVelocity = 50;    
+        this._tickFallVelocity = 50;
+                
+        this._blocks = new Array(20);
+        
+        for(let y = 0; y < this._yblock; ++y)           
+            this._blocks[y] = new Array(10).fill({ occupied: false, color: '' });  
+          
     }
 
-    get x(){ return this._x; }
-    get y(){ return this._y; }
-    get width(){ return this._width; }
-    get height(){ return this._height; }    
+    get x() { return this._x; }
+    get y() { return this._y; }
+    get width() { return this._width; }
+    get height() { return this._height; }    
+    get blocks() { return this._blocks; }
+   // get xBlock() { return this.xBlock; }
+   // get yBlock() { return this.yBlock; }
+
+    fill(x, y, color) { 
+        
+        this._blocks[y][x].occupied = true;
+        this._blocks[y][x].color = color;
+    }
 
     update = (dt) => {
 
@@ -58,7 +74,23 @@ export default class Grid{
             this._preRendered = canvas;
         }
 
-        return this._game.context.drawImage(this._preRendered, 0, 0);        
+        this._game.context.drawImage(this._preRendered, 0, 0);
+        
+        for(var y = 0; y < this._yblock; ++y){
+
+            for(var x = 0; x < this._xblock; ++x){
+                
+                let block = this._blocks[y][x];
+
+                if(block.occupied) {
+
+                    this._game.context.fillStyle = block.color;
+                    this._game.context.fillRect(this._x + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
+                    this._game.context.strokeRect(this._x + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
+
+                }
+            }
+        }   
     }
 
     isTickFall = (dt) =>  {

@@ -1,6 +1,7 @@
 import Piece from "../Pieces.class.js";
 import Grid from "../Grid.class.js";
 import Collision from "../Collision.class.js";
+import TryMerge from "../TryMerge.class.js";
 
 export default class PlayScene{
 
@@ -17,7 +18,7 @@ export default class PlayScene{
         this._countDown = 3;
         this._canCountDown = false;
 
-        this._blockSide = this._game.config.canvasWidth / 20;        
+        this._blockSide = 30 //this._game.config.canvasWidth / 20;        
 
         this._grid = new Grid(game, this._blockSide);
         this._piece = new Piece(game, this._blockSide);
@@ -34,11 +35,13 @@ export default class PlayScene{
 
                 this._piece.update(dt);
 
-                Collision.piece = this._piece;                
                 Collision.grid = this._grid;
+                Collision.piece = this._piece;                                
                 Collision.checkCollision(this._blockSide);
 
-                this._grid.update(dt);
+                TryMerge.add(this._grid, this._piece, this._blockSide);                    
+                  
+                this._grid.update(dt);                
 
                 break;    
 
