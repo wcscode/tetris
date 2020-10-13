@@ -41,8 +41,7 @@ export default class Piece{
             size: 3,
             allowedPosition: 4,
             offsetX: offsetInitialX + this._blockSide * 3,
-            offsetY: 0,
-            color: '#59564F'
+            offsetY: 0
         };
 
         const l = { blocks: [
@@ -59,8 +58,7 @@ export default class Piece{
             size: 3,
             allowedPosition: 4,
             offsetX: offsetInitialX + this._blockSide * 3,
-            offsetY: 0,
-            color: '#59564F'
+            offsetY: 0
         };
 
         const j = { blocks: [
@@ -77,8 +75,7 @@ export default class Piece{
             size: 3,
             allowedPosition: 4,
             offsetX: offsetInitialX + this._blockSide * 3,
-            offsetY: 0,
-            color: '#59564F'
+            offsetY: 0
         };
 
         const s = { blocks: [
@@ -95,8 +92,7 @@ export default class Piece{
             size: 3,
             allowedPosition: 2,
             offsetX: offsetInitialX + this._blockSide * 3,
-            offsetY: 0,
-            color: '#59564F'
+            offsetY: 0
         };   
 
 
@@ -114,8 +110,7 @@ export default class Piece{
             size: 3,
             allowedPosition: 2,
             offsetX: offsetInitialX + this._blockSide * 3,
-            offsetY: 0,
-            color: '#59564F'
+            offsetY: 0
         };   
 
         const o =  { blocks: [
@@ -131,8 +126,7 @@ export default class Piece{
             size: 2,
             allowedPosition: 1,
             offsetX: offsetInitialX + this._blockSide * 3,
-            offsetY: 0,
-            color: '#59564F'
+            offsetY: 0
         };
              
         this._pieces = [];
@@ -160,8 +154,8 @@ export default class Piece{
     get offsetY() { return this._currentPiece.y - this._currentPiece.offsetY; }
 
     new = () => {
-
-        this._currentPiece = this._pieces[0];
+        
+        this._currentPiece = Object.assign({}, this._pieces[0]);
       // this._currentPiece = this._pieces[Math.floor((Math.random() * 7))];
        
     }
@@ -197,8 +191,8 @@ export default class Piece{
 
     update = (dt) => {
 
-        if(!this.canFall)
-            this.new();              
+        //if(!this.canFall)
+        //    this.new();              
         
         if (this._game.control.isPressedOnce('PLAYER_1', 'UP'))
             this.rotate();

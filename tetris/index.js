@@ -1,10 +1,10 @@
 'use strict';
 
 import * as c from '../const.js';
-import Game  from './EngineGame.js';
-import Scene from './EngineScene.js';
-import State from './EngineState.js';
-import Control from './EngineControl.js';
+import Game  from './Engine/EngineGame.js';
+import Scene from './Engine/EngineScene.js';
+import State from './Engine/EngineState.js';
+import Control from './Engine/EngineControl.js';
 import StartScene from './Scenes/StartScene.js';
 import PlayScene from './Scenes/PlayScene.js';
 

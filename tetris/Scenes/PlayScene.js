@@ -1,7 +1,8 @@
 import Piece from "../Pieces.class.js";
 import Grid from "../Grid.class.js";
 import Collision from "../Collision.class.js";
-import TryMerge from "../TryMerge.class.js";
+import Merge from "../Merge.class.js";
+import { BLOCK_SIDE } from "../const.js";
 
 export default class PlayScene{
 
@@ -18,7 +19,10 @@ export default class PlayScene{
         this._countDown = 3;
         this._canCountDown = false;
 
-        this._blockSide = 30 //this._game.config.canvasWidth / 20;        
+        this._tickFall = 0;
+        this._tickFallVelocity = 50;
+
+        this._blockSide = BLOCK_SIDE;        
 
         this._grid = new Grid(game, this._blockSide);
         this._piece = new Piece(game, this._blockSide);
@@ -37,11 +41,17 @@ export default class PlayScene{
 
                 Collision.grid = this._grid;
                 Collision.piece = this._piece;                                
-                Collision.checkCollision(this._blockSide);
+                Collision.check(this._blockSide);
 
-                TryMerge.add(this._grid, this._piece, this._blockSide);                    
+                if(this.isTickFall(dt) && !this._piece.canFall) {
                   
-                this._grid.update(dt);                
+                    Merge.add(this._grid, this._piece, this._blockSide);  
+                    this._piece.new();
+                }
+                
+                  
+                this._grid.update(dt);  
+                     
 
                 break;    
 
@@ -85,6 +95,20 @@ export default class PlayScene{
        
     }
 
+    
+    isTickFall = (dt) =>  {
+
+        this._tickFall += Math.floor(1 * (1 + dt));
+
+        if(this._tickFall % this._tickFallVelocity == 0) {
+
+            this._tickFall = 0;
+            return true;
+        }
+
+        return false;
+    }  
+
     clear = () => {
 
         const { canvasWidth, canvasHeight } = this._game.config;
@@ -101,7 +125,7 @@ export default class PlayScene{
         if(this._preRendered == null){
             
             const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
+           // const context = canvas.getContext('2d');
 
             const { canvasWidth, canvasHeight } = this._game.config;
 

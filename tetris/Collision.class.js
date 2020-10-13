@@ -10,7 +10,7 @@ export default class Collision{
         this._grid = grid;
     }
 
-    static checkCollision = (blockSide) => {      
+    static check = (blockSide) => {      
 
         const size = this._piece.size;       
         const length = this._piece.blocks.length;
@@ -57,7 +57,7 @@ export default class Collision{
                     if(this._piece.canFall){
                        
                         if(this._piece.y + yBlock + blockSide == this._grid.height) {
-                         //   this._piece.moveUp();                       
+                                          
                             this._piece.canFall = false;
                         }
                     }
