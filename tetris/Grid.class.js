@@ -1,3 +1,5 @@
+import renderGrid from '../RenderedObjects/RenderGrid.js';
+
 export default class Grid{
 
     constructor(game, blockSide){
@@ -15,14 +17,11 @@ export default class Grid{
 
         this._x = (canvasWidth / 2) - (this._width / 2);
         this._y = 0;    
-
-        this._tickFall = 0;
-        this._tickFallVelocity = 50;
                 
-        this._blocks = new Array(20);
+        this._blocks = new Array(20).fill(0);
         
-        for(let y = 0; y < this._yblock; ++y)           
-            this._blocks[y] = new Array(10).fill({ occupied: false, color: '' });  
+        for(let y = 0; y < this._blocks.length; ++y) 
+            this._blocks[y] = new Array(10).fill(0);  
           
     }
 
@@ -34,11 +33,7 @@ export default class Grid{
    // get xBlock() { return this.xBlock; }
    // get yBlock() { return this.yBlock; }
 
-    fill(x, y, color) { 
-        
-        this._blocks[y][x].occupied = true;
-        this._blocks[y][x].color = color;
-    }
+    fill(x, y) { this._blocks[y][x] = 1; }
 
     update = (dt) => {
 
@@ -48,61 +43,28 @@ export default class Grid{
 
     render = () => {
 
-        if(this._preRendered == null) {
-            
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
+        if(this._preRendered == null)
+            this._preRendered = renderGrid(this._game, this._blockSide, this._x, this._xblock, this._yblock);        
 
-            const { canvasWidth, canvasHeight } = this._game.config;
-
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-
-            context.fillStyle = 'purple';
-            context.strokeStyle = '#ffccdd';
-            context.lineWidth = 1;
-
-            for(var y = 0; y < this._yblock; ++y){
-
-                for(var x = 0; x < this._xblock; ++x){
-            
-                    context.fillRect(this._x + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
-                    context.strokeRect(this._x + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
-                }
-            }   
-            
-            this._preRendered = canvas;
-        }
-
-        this._game.context.drawImage(this._preRendered, 0, 0);
+        this._game.context.drawImage(this._preRendered, 0, 0);   
         
+        this._game.context.fillStyle = 'green';
+        this._game.context.strokeStyle = '#ffccdd';
+        this._game.context.lineWidth = 1;
+
         for(var y = 0; y < this._yblock; ++y){
 
             for(var x = 0; x < this._xblock; ++x){
                 
-                let block = this._blocks[y][x];
+                if(this._blocks[y][x] == 1){
 
-                if(block.occupied) {
-
-                    this._game.context.fillStyle = block.color;
                     this._game.context.fillRect(this._x + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
                     this._game.context.strokeRect(this._x + this._blockSide * x, this._blockSide * y, this._blockSide, this._blockSide);
-
                 }
             }
         }   
+        
+        
     }
 
-    isTickFall = (dt) =>  {
-
-        this._tickFall += Math.floor(1 * (1 + dt));
-
-        if(this._tickFall % this._tickFallVelocity == 0) {
-
-            this._tickFall = 0;
-            return true;
-        }
-
-        return false;
-    }   
 }
