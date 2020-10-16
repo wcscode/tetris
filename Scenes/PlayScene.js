@@ -39,6 +39,7 @@ export default class PlayScene{
 
                 this._piece.update(dt);
 
+                Collision.game = this._game;
                 Collision.grid = this._grid;
                 Collision.piece = this._piece;                                
                 Collision.check(this._blockSide);

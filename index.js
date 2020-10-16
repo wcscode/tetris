@@ -23,7 +23,7 @@ Game.load = () => {
 
     Game.control.addCommand('PLAYER_1', c.PLAYER_1_COMMAND_ENTER, 'START');
     Game.control.addCommand('PLAYER_1', c.PLAYER_1_COMMAND_LEFT, 'LEFT');
-    Game.control.addCommand('PLAYER_1', c.PLAYER_1_COMMAND_UP, 'UP');
+    Game.control.addCommand('PLAYER_1', c.PLAYER_1_COMMAND_UP, 'ROTATE');
     Game.control.addCommand('PLAYER_1', c.PLAYER_1_COMMAND_RIGHT, 'RIGHT');
     Game.control.addCommand('PLAYER_1', c.PLAYER_1_COMMAND_DOWN, 'DOWN');
     Game.control.addCommand('PLAYER_1', c.PLAYER_1_COMMAND_SPACE, 'SPIN');        

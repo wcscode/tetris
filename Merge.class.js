@@ -13,7 +13,7 @@ export default class Merge {
                     let block = piece.blocks[piece.position(piece.direction, length, size, x, y)];
                     let xBlock = (blockSide * x + piece.offsetX) / blockSide;
                     let yBlock = (blockSide * y + piece.offsetY) / blockSide;
-                    ;
+                    
                     if(block == 1) {
 
                         grid.fill(xBlock, yBlock);    

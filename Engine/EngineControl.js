@@ -27,7 +27,7 @@ export default class EngineControl{
         const commandKeyCode = event.which || event.keyCode;
         
         const command = this._commands.find(f => f.commandKeyCode == commandKeyCode && !f.pressed);
-       
+      
         if(command) command.pressed = true; 
     }
 
@@ -35,8 +35,8 @@ export default class EngineControl{
          
         const commandKeyCode = event.which || event.keyCode;
 
-        const command = this._commands.find(f => f.commandKeyCode == commandKeyCode && f.pressed);
-
+        const command = this._commands.find(f => f.commandKeyCode == commandKeyCode);
+       
         if(command) { 
 
             command.pressed = false;       
@@ -44,10 +44,18 @@ export default class EngineControl{
         }
     }
 
-    isPressed = (playerName, commandName) => {
-        
-        return this._commands.find(f => f.playerName == playerName && f.commandName == commandName).pressed;
-    }
+    isPressed = (playerName, commandName) => this._commands.find(f => f.playerName == playerName && f.commandName == commandName).pressed;    
+
+    pressedButtons = (playerName) => this._commands.filter(f => f.playerName == playerName && f.pressed);    
+
+    cancelPressed = (commandName) => { 
+
+        const command = this._commands.find(f => f.commandName == commandName); 
+
+        command.pressed = false;
+       
+
+    }   
 
     isPressedOnce = (playerName, commandName) => {
        
@@ -55,8 +63,8 @@ export default class EngineControl{
        
         if(command.pressed && !command.alreadyPressed){
             
-            command.alreadyPressed = true;
-            return true;
+            return command.alreadyPressed = true;
+            
         }
 
         return false;

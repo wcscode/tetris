@@ -63,8 +63,10 @@ export default class Grid{
                 }
             }
         }   
-        
-        
     }
 
+    //hasIndex = (indexGridX, indexGridY) => indexGridX > -1 && indexGridX < this._xblock && indexGridY > -1 && indexGridY < this._yblock;
+    hasIndexLeft = (indexGridX) => indexGridX > -1;
+    hasIndexRight = (indexGridX) => indexGridX < this._xblock;
+    hasIndexDown = (indexGridY) => indexGridY < this._yblock;
 }
